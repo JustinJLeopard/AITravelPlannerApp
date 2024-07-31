@@ -1,5 +1,7 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { CreateTripContext } from "../context/CreateTripContext";
+import React, { useState } from "react";
 
 
 export default function RootLayout() {
@@ -10,7 +12,9 @@ export default function RootLayout() {
     'inconsolata-extra-bold': require('../assets/fonts/Inconsolata_Condensed-ExtraBold.ttf'),
   });
 
+  const [tripData, setTripData] = useState([]);
   return (
+    <CreateTripContext.Provider value={{tripData, setTripData}}>
     <Stack screenOptions= {{
         headerShown: false
     }}>
@@ -20,5 +24,6 @@ export default function RootLayout() {
 
       <Stack.Screen name="(tabs)" />
     </Stack>
+    </CreateTripContext.Provider>
   );
 }
