@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import  React, { useContext, useEffect } from 'react'
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { Colors } from './../../constants/Colors.ts'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { CreateTripContext } from './../../context/CreateTripContext.js';
@@ -9,6 +9,7 @@ export default function SearchPlace() {
 
     const navigation = useNavigation();
     const {tripData, setTripData}= useContext(CreateTripContext);
+    const router= useRouter();
 
     useEffect(() => {
         navigation.setOptions({
@@ -36,10 +37,6 @@ export default function SearchPlace() {
       fetchDetails={true}
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
-        console.log(data.description);
-        console.log(details?.geometry.location);
-        console.log(details?.photos[0]?.photo_reference);
-        console.log(details?.url);
         setTripData({
             locationInfo: {
                 name: data.description,
@@ -47,7 +44,8 @@ export default function SearchPlace() {
                 photoRef: details?.photos[0]?.photo_reference,
                 url: details?.url,
             }
-        })
+        });
+        router.push('/create-trip/select-traveler');
       }}
       query={{
         key: process.env.EXPO_PUBLIC_GOOGLE_MAP_KEY,
@@ -69,12 +67,13 @@ export default function SearchPlace() {
                 fontWeight: 'bold',
                 shadowColor: 'black',
                 shadowOffset: {
-                    width: 0,
-                    height: 2,
+                    width: 5,
+                    height: 10,
                 },
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
-                elevation: 5,
+                elevation: 10,
+                marginTop: 25,
             },
             listView: {
                 backgroundColor: Colors.white,
