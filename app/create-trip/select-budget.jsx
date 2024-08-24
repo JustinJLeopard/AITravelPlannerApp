@@ -7,12 +7,19 @@ import { SelectBudgetOptions } from '../../constants/Options.js';
 import { OptionCard } from './../../components/CreateTrip/OptionCard';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { CreateTripContext } from '../../context/CreateTripContext.js';
+import { useContext } from 'react';
+import { useRouter } from 'expo-router';
 
 export default function SelectBudget() {
 
     const navigation = useNavigation();
 
     const [selectedBudget, setSelectedBudget] = useState();
+
+    const {tripData, setTripData}= useContext(CreateTripContext);
+
+    const router = useRouter();
 
     useEffect(() => {
         navigation.setOptions({
@@ -21,6 +28,22 @@ export default function SelectBudget() {
             headerTitle: '',
         });
     }, []);
+
+    useEffect(() => {
+        setTripData({
+            ...tripData,
+            budget: selectedBudget,
+        })
+    }, [selectedBudget])
+
+
+    const onClickContinue = () => {
+      if (!selectedBudget) {
+          ToastAndroid.show('Please select budget', ToastAndroid.LONG);
+          return;
+      }
+      router.push('/create-trip/review-trip');
+    }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -64,6 +87,27 @@ export default function SelectBudget() {
         )}
       />
       </View>
+      <TouchableOpacity
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: Colors.black,
+                    padding: 15,
+                    borderRadius: 15,
+                    marginTop: 0,
+                    marginBottom: 0,
+                }}
+                onPress={() => onClickContinue()}>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            color: Colors.white,
+                            marginTop: 1,
+                        }}
+                    >
+                        Continue
+                    </Text>
+            </TouchableOpacity>
     </View>
     </GestureHandlerRootView>
   )
